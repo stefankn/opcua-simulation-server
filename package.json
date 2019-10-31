@@ -1,5 +1,5 @@
 {
-  "name": "opcua-server",
+  "name": "opcua-simulation-server",
   "version": "1.0.0",
   "description": "OPCUA Simulation server",
   "main": "index.js",
