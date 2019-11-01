@@ -1,9 +1,9 @@
-const os = require("os")
 const opcua = require("node-opcua")
+const config = require('./config')
 
 const server = new opcua.OPCUAServer({
-  port: 4334,
-  resourcePath: "/UA/SimulationServer"
+  port: config.port,
+  resourcePath: config.resourcePath
 })
 
 server.initialize(() => {
@@ -11,26 +11,23 @@ server.initialize(() => {
   const addressSpace = server.engine.addressSpace
   const namespace = addressSpace.getOwnNamespace()
 
+  
   const device = namespace.addObject({
     organizedBy: addressSpace.rootFolder.objects,
-    browseName: "SimulatedDevice"
+    browseName: config.deviceName
   })
 
-  const memoryUsedPercentage = os.freemem() / os.totalmem() + 100.0
-  namespace.addVariable({
-    componentOf: device,
-    nodeId: "s=free_memory",
-    browseName: "FreeMemory",
-    dataType: "Double",
-    value: {
-      get: () => {
-        console.log("Polled free memory variable")
-        return new opcua.Variant({
-          dataType: opcua.DataType.Double, 
-          value: memoryUsedPercentage 
-        }) 
-      }
-    }
+  console.log(`Added device "${device.browseName} (${device.nodeId})"...`)
+
+  config.variables.forEach(variable => {
+    const v = namespace.addVariable({
+      componentOf: device,
+      nodeId: variable.nodeId,
+      browseName: variable.name,
+      dataType: variable.dataType,
+      value: { get: variable.value }
+    })
+    console.log(`Added variable "${v.browseName} (${v.nodeId})"...`)
   })
 
   server.start(() => {
