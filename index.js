@@ -36,10 +36,3 @@ server.initialize(() => {
     console.log("Endpoint: ", endpointUrl );
   })
 })
-
-
-
-
-
-
-
