@@ -33,6 +33,6 @@ server.initialize(() => {
   server.start(() => {
     console.log("OPCUA simulation server started...")
     const endpointUrl = server.endpoints[0].endpointDescriptions()[0].endpointUrl;
-    console.log("Endpoint: ", endpointUrl );
+    console.log(`Endpoint: ${endpointUrl}`);
   })
 })
